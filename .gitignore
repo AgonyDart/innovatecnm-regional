@@ -1,0 +1,6 @@
+.env
+/mosquitto/data
+/mosquitto/log
+
+/backend/__pycache__/
+/backend/.env
