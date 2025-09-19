@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class PanelBase(BaseModel):
@@ -7,9 +8,9 @@ class PanelBase(BaseModel):
     current_a: float
     temperature_c: float
     irradiance_w_m2: float
-    reading_at: str
-    created_at: str
-    updated_at: str
+    reading_at: datetime
+    created_at: datetime
+    updated_at: datetime
 
 
 class PanelCreate(PanelBase):
