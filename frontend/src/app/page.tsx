@@ -29,16 +29,16 @@ export default function Home() {
           <h1 className="text-2xl sm:text-4xl md:text-7xl mt-8 sm:mt-16 md:mt-32 font-semibold font-worksans">
             Eco Monitoreo Solar
           </h1>
-          <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-4">
             <Image
-              src="/ems_logo.png"
+              src="/ems.svg"
               alt="Eco Monitoreo Solar"
-              width={48}
-              height={48}
-              className="my-8 sm:my-12 md:my-20"
+              width={192}
+              height={192}
+              className="my-8 sm:my-12 md:my-20 lg:w-[192px] lg:h-[192px] md:w-[128px] md:h-[128px] w-[64px] h-[64px]"
               priority
             />
-          </div>
+            </div>
           <div>
             <p className="mt-6 sm:mt-10 md:mt-16 font-montserrat font-regular text-lg sm:text-2xl md:text-5xl">
               Energía <span className="text-primary">limpia</span>

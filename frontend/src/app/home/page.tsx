@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect } from "react";
 import Warning from "../components/warning";
 import Navbar from "../components/navbar";
 import Saving from "../components/saving";
@@ -13,9 +16,13 @@ export default function Home() {
       {/* Content */}
       <div className="flex flex-col w-full max-w-5xl min-h-screen items-center">
         <Warning className="mb-7 mt-12" />
-        <WeatherCard />
-        <PerformanceCard />
-        <h1 className="text-4xl font-semibold font-worksans mb-2 text-left w-5/6">
+        <div className="flex flex-col w-full max-w-5xl items-center">
+          <div className="w-full flex flex-col md:grid md:grid-cols-2 md:gap-12 mt-12 mb-7">
+            <WeatherCard />
+            <PerformanceCard />
+          </div>
+        </div>
+        <h1 className="text-4xl font-semibold font-worksans mb-2 text-left w-full">
           Ahorros
         </h1>
         <Saving />
