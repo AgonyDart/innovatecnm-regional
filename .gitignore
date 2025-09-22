@@ -2,7 +2,8 @@
 /mosquitto/data
 /mosquitto/log
 
-/backend/__pycache__/
+/backend/app/__pycache__/
+/backend/app/*/__pycache__/
 /backend/.env
 /backend/venv/
 
