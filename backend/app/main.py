@@ -2,7 +2,7 @@ from typing import Union
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import panels
+from .routers import panels, weather
 
 app = FastAPI()
 
@@ -15,6 +15,7 @@ app.add_middleware(
 )
 
 app.include_router(panels.router)
+app.include_router(weather.router)
 
 
 @app.get("/")
