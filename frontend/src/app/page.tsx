@@ -198,7 +198,7 @@ export default function Home() {
                 </p>
               </div>
               {/* Right: Navigation Links */}
-              <nav className="flex flex-col md:flex-row gap-2 md:gap-6 items-center">
+              {/* <nav className="flex flex-col md:flex-row gap-2 md:gap-6 items-center">
                 <a
                   href="#"
                   className="font-montserrat text-base text-bone hover:text-primary transition"
@@ -223,7 +223,7 @@ export default function Home() {
                 >
                   Contacto
                 </a>
-              </nav>
+              </nav> */}
             </div>
             <div className="border-t border-bone/20 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="font-montserrat text-sm text-bone text-center">

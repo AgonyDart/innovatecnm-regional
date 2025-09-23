@@ -1,47 +1,95 @@
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
+"use client";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import GlowCard from "./glowcard";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export default function SimpleChart({
   labels,
   values,
+  title,
 }: {
   labels: string[];
   values: number[];
+  title?: string;
 }) {
   const data = {
-    labels: labels,
+    labels,
     datasets: [
       {
-        label: "My First Dataset",
+        label: "Energía (W)",
         data: values,
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-          "rgba(199, 199, 199, 0.2)",
-        ],
-        borderColor: [
-          "rgb(255, 99, 132)",
-          "rgb(54, 162, 235)",
-          "rgb(255, 206, 86)",
-          "rgb(75, 192, 192)",
-          "rgb(153, 102, 255)",
-          "rgb(255, 159, 64)",
-          "rgb(159, 159, 159)",
-        ],
-        borderWidth: 1,
+        borderColor: "rgb(255, 255, 255)",
+        backgroundColor: "rgba(255, 255, 255, 1)",
       },
     ],
   };
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: title || "Lectura de energía generada",
+        color: "#fff",
+      },
+    },
+    scales: {
+      x: {
+        display: true,
+        title: {
+          display: true,
+          text: "Tiempo",
+          color: "#fff",
+        },
+        ticks: {
+          color: "#fff",
+        },
+        grid: {
+          color: "rgba(255,255,255,0.2)",
+        },
+      },
+      y: {
+        display: true,
+        title: {
+          display: true,
+          text: "Energía (W)",
+          color: "#fff",
+        },
+        ticks: {
+          color: "#fff",
+        },
+        grid: {
+          color: "rgba(255,255,255,0.2)",
+        },
+      },
+    },
+  };
+
   return (
-    <div className="w-full max-w-md p-4 bg-white rounded-lg shadow-md">
-      <Doughnut data={data} />
-    </div>
+    <GlowCard className="w-full p-4 bg-background rounded-4xl shadow-md mt-8">
+      <div className="relative h-[300px] sm:h-[400px] md:h-[500px] w-full">
+        <Line data={data} options={options} width={undefined} height={undefined} />
+      </div>
+    </GlowCard>
   );
 }
