@@ -6,10 +6,10 @@ export default function PerformanceCard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const ws = new WebSocket(`${process.env.API}/panels/ws`);
+    const ws = new WebSocket(`${process.env.NEXT_PUBLIC_API}/panels/ws`);
 
     ws.onopen = () => {
-      // console.log("WebSocket connected successfully.");
+      console.log("WebSocket connected successfully.");
       setLoading(false);
     };
 
@@ -31,7 +31,7 @@ export default function PerformanceCard() {
     };
 
     ws.onclose = () => {
-      // console.log("WebSocket disconnected.");
+      console.log("WebSocket disconnected.");
       if (ws.readyState !== WebSocket.CLOSED) return;
 
       let attempts = 0;
@@ -40,7 +40,10 @@ export default function PerformanceCard() {
       function tryReconnect() {
         if (attempts < maxAttempts) {
           attempts++;
-          const newWs = new WebSocket(`${process.env.API}/panels/ws`);
+          console.log(`Reconnection attempt ${attempts}...`);
+          const newWs = new WebSocket(
+            `${process.env.NEXT_PUBLIC_API}/panels/ws`
+          );
           newWs.onopen = ws.onopen;
           newWs.onmessage = ws.onmessage;
           newWs.onclose = ws.onclose;
@@ -52,7 +55,7 @@ export default function PerformanceCard() {
     };
 
     ws.onerror = (error) => {
-      // console.error("WebSocket error:", error);
+      console.error("WebSocket error:", error);
     };
 
     // Cleanup function: This runs when the component is unmounted
