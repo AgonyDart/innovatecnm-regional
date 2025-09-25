@@ -1,5 +1,5 @@
 import GlowCard from "../components/glowcard";
-import { Sun } from "lucide-react";
+import { Cloudy, Sun } from "lucide-react";
 
 export default function WeatherCard() {
   return (
@@ -8,14 +8,15 @@ export default function WeatherCard() {
         Clima en tiempo real
       </p>
       <div className="flex items-center w-full">
-        <Sun size={40} />
-        <div>
+        <Cloudy size={40} />
+        <div className="pl-6">
           <p className="text-lg font-montserrat font-normal w-full text-left px-2 mb-2">
-            25°C
+            17°C
           </p>
-          <p className="text-lg font-montserrat font-normal w-full text-left px-2 mb-2">
-            Descripción del clima
+          <p className="text-lg text-yellow-300 font-montserrat font-normal w-full text-left px-2 mb-2">
+            ! Parcialmente nublado
           </p>
+          <p className="text-lg font-montserrat font-normal w-full text-left px-2 mb-2"></p>
         </div>
       </div>
     </GlowCard>

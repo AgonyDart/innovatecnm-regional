@@ -6,7 +6,7 @@ export default function PerformanceCard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const ws = new WebSocket(`${process.env.NEXT_PUBLIC_API}/panels/ws`);
+    const ws = new WebSocket(`${process.env.API}/panels/ws`);
 
     ws.onopen = () => {
       console.log("WebSocket connected successfully.");

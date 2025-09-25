@@ -10,19 +10,37 @@ const SimpleChart = dynamic(() => import("../components/simpleChart"), {
 
 export default function Home() {
   const [panels, setPanels] = useState<
-    Record<number, { labels: string[]; values: number[]; name?: string }>
+    Record<
+      number,
+      {
+        labels: string[];
+        values: number[];
+        name?: string;
+        savings_mxn: number;
+        efficiency_percent: number;
+      }
+    >
   >({});
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const ws = new WebSocket(`${process.env.API}/panels/ws`);
     ws.onmessage = (event) => {
       const panelsData = JSON.parse(event.data);
+      // console.log(panelsData);
+      if (loading) setLoading(false);
       setPanels((prev) => {
         const next = { ...prev };
         panelsData.slice(-30).forEach((panel: any, idx: number) => {
           const formattedDate = new Date(panel.reading_at).toLocaleTimeString();
           const id = panel.panel_id ?? idx;
           if (!next[id]) {
-            next[id] = { labels: [], values: [], name: panel.name };
+            next[id] = {
+              labels: [],
+              values: [],
+              name: panel.name,
+              savings_mxn: panel.savings_mxn,
+              efficiency_percent: panel.efficiency_percent,
+            };
           }
           next[id] = {
             ...next[id],
@@ -30,6 +48,7 @@ export default function Home() {
             values: [...next[id].values, panel.power_w].slice(-30),
           };
         });
+        console.log(next);
         return next;
       });
     };
@@ -45,11 +64,18 @@ export default function Home() {
 
       {/* Content */}
       <div className="flex flex-col w-full max-w-5xl min-h-screen items-center z-10">
+        {loading && (
+          <p className="text-xl flex justify-center items-center">
+            Cargando...
+          </p>
+        )}
         {Object.entries(panels).map(([id, panel]) => (
           <div key={id} className="w-full mb-8">
             <SimpleChart
               labels={panel.labels}
               values={panel.values}
+              savings={panel.savings_mxn}
+              percentage={panel.efficiency_percent}
               title={
                 id === "0"
                   ? "Panel de referencia"

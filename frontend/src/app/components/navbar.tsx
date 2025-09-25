@@ -9,13 +9,13 @@ export default function Navbar() {
 
   const links = [
     { href: "/home", icon: Home },
-    { href: "/panels", icon: Sun },
+    // { href: "/panels", icon: Sun },
     { href: "/charts", icon: ChartNoAxesColumn },
     { href: "/profile", icon: User },
   ];
 
   return (
-    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-background w-[296px] shadow flex gap-2 p-2 justify-center rounded-full z-10">
+    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-background w-[232px] shadow flex gap-2 p-2 justify-center rounded-full z-10">
       {links.map(({ href, icon: Icon }) => {
         const isActive = pathname === href;
         return (
