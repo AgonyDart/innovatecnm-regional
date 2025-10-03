@@ -76,8 +76,8 @@ export default function SimpleChart({
         },
       },
       y: {
-        min: 100,
-        max: 180,
+        min: 0,
+        max: 5,
         display: true,
         title: {
           display: true,
@@ -129,7 +129,7 @@ export default function SimpleChart({
               <div className="flex h-2 w-full gap-1">
                 {Array.from({ length: 10 }).map((_, i) => {
                   const stepValue =
-                    ((values[values.length - 1] ?? 0) / 180) * 10;
+                    ((values[values.length - 1] ?? 0) / 30) * 10;
                   const isFilled = i < stepValue;
                   return (
                     <div

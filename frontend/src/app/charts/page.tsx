@@ -23,37 +23,51 @@ export default function Home() {
   >({});
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const ws = new WebSocket(`${process.env.API}/panels/ws`);
-    ws.onmessage = (event) => {
-      const panelsData = JSON.parse(event.data);
-      // console.log(panelsData);
-      if (loading) setLoading(false);
-      setPanels((prev) => {
-        const next = { ...prev };
-        panelsData.slice(-30).forEach((panel: any, idx: number) => {
-          const formattedDate = new Date(panel.reading_at).toLocaleTimeString();
-          const id = panel.panel_id ?? idx;
-          if (!next[id]) {
-            next[id] = {
-              labels: [],
-              values: [],
-              name: panel.name,
-              savings_mxn: panel.savings_mxn,
-              efficiency_percent: panel.efficiency_percent,
-            };
-          }
-          next[id] = {
-            ...next[id],
-            labels: [...next[id].labels, formattedDate].slice(-30),
-            values: [...next[id].values, panel.power_w].slice(-30),
-          };
-        });
-        console.log(next);
-        return next;
-      });
+    let intervalId: NodeJS.Timeout;
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://172.18.85.161:8001/panels/mqtt/latest"
+        );
+        const panelsData = await response.json();
+        if (Array.isArray(panelsData)) {
+          setPanels((prev) => {
+            const next = { ...prev };
+            panelsData.slice(-30).forEach((panel: any, idx: number) => {
+              const formattedDate = new Date(
+                panel.reading_at
+              ).toLocaleTimeString();
+              const id = panel.panel_id ?? idx;
+              if (!next[id]) {
+                next[id] = {
+                  labels: [],
+                  values: [],
+                  name: panel.name,
+                  savings_mxn: panel.savings_mxn,
+                  efficiency_percent: panel.efficiency_percent,
+                };
+              }
+              next[id] = {
+                ...next[id],
+                labels: [...next[id].labels, formattedDate].slice(-30),
+                values: [...next[id].values, panel.power_w].slice(-30),
+              };
+            });
+            return next;
+          });
+        }
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.error("Failed to fetch panel data:", error);
+      }
     };
+
+    fetchData();
+    intervalId = setInterval(fetchData, 2000);
+
     return () => {
-      ws.close();
+      clearInterval(intervalId);
     };
   }, []);
 

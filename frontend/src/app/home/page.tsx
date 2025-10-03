@@ -8,6 +8,21 @@ import WeatherCard from "../components/weather";
 import PerformanceCard from "../components/performance";
 
 export default function Home() {
+  // console.log("hola");
+  // useEffect(() => {
+  //   console.log("Starting fetch for latest MQTT panel data...");
+  //   fetch("http://172.18.85.161:8001/")
+  //     .then((response) => {
+  //       console.log("Received response:", response);
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       console.log("Parsed JSON data:", data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching MQTT panel data:", error);
+  //     });
+  // }, []);
   return (
     <section className="relative flex justify-center items-center min-h-screen w-full overflow-hidden bg-light-background">
       {/* Background Layers */}

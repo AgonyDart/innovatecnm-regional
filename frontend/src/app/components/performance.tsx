@@ -6,61 +6,36 @@ export default function PerformanceCard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const ws = new WebSocket(`${process.env.API}/panels/ws`);
+    let intervalId: NodeJS.Timeout;
 
-    ws.onopen = () => {
-      console.log("WebSocket connected successfully.");
-      setLoading(false);
-    };
-
-    ws.onmessage = (event) => {
+    const fetchData = async () => {
       try {
-        const panelsData = JSON.parse(event.data);
+        const response = await fetch(
+          "http://172.18.85.161:8001/panels/mqtt/latest"
+        );
+        const panelsData = await response.json();
+        // console.log(panelsData);
         if (Array.isArray(panelsData)) {
           let totalEnergy = 0;
           for (const panel of panelsData) {
             if (panel.power_w) {
               totalEnergy += panel.power_w;
+              // console.log("id" + panel.panel_id + ", w: " + panel.power_w);
             }
           }
           setEnergyGenerated(totalEnergy);
         }
+        setLoading(false);
       } catch (error) {
-        console.error("Failed to parse WebSocket message:", error);
+        console.error("Failed to fetch panel data:", error);
       }
     };
 
-    ws.onclose = () => {
-      console.log("WebSocket disconnected.");
-      if (ws.readyState !== WebSocket.CLOSED) return;
+    fetchData();
+    intervalId = setInterval(fetchData, 2000);
 
-      let attempts = 0;
-      const maxAttempts = 3;
-
-      function tryReconnect() {
-        if (attempts < maxAttempts) {
-          attempts++;
-          console.log(`Reconnection attempt ${attempts}...`);
-          const newWs = new WebSocket(
-            `${process.env.NEXT_PUBLIC_API}/panels/ws`
-          );
-          newWs.onopen = ws.onopen;
-          newWs.onmessage = ws.onmessage;
-          newWs.onclose = ws.onclose;
-          newWs.onerror = ws.onerror;
-        }
-      }
-
-      tryReconnect();
-    };
-
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    // Cleanup function: This runs when the component is unmounted
     return () => {
-      ws.close();
+      clearInterval(intervalId);
     };
   }, []);
 
@@ -79,7 +54,7 @@ export default function PerformanceCard() {
       <div className="w-full h-2 bg-light-background rounded-full mt-4">
         <div
           className="h-2 bg-primary rounded-full"
-          style={{ width: `${Math.min((energyGenerated / 5000) * 100, 100)}%` }}
+          style={{ width: `${Math.min((energyGenerated / 10) * 100, 100)}%` }}
         ></div>
       </div>
     </Card>
