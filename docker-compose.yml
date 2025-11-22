@@ -37,6 +37,7 @@ services:
   # Backend (FastAPI + Data Ingestion & AI)
   backend:
     build: ./backend 
+    restart: always
     depends_on:
       mosquitto:
         condition: service_started
