@@ -32,10 +32,11 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT_INTERNAL}"
   # Backend (FastAPI + Data Ingestion & AI)
   backend:
-    build: ./backend
+    build: ./backend 
     restart: always
     depends_on:
       mosquitto:
@@ -49,6 +50,7 @@ services:
       - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
       - DB_NAME=${POSTGRES_DB}
+      - DB_PORT=${POSTGRES_PORT_INTERNAL}
     ports:
       - "${BACKEND_PORT}:8000"
     networks:
