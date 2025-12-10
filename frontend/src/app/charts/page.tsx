@@ -27,35 +27,50 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://172.18.85.161:8001/panels/mqtt/latest"
+          "http://10.179.22.161:8001/panels/mqtt/latest"
         );
         const panelsData = await response.json();
-        if (Array.isArray(panelsData)) {
-          setPanels((prev) => {
-            const next = { ...prev };
-            panelsData.slice(-30).forEach((panel: any, idx: number) => {
-              const formattedDate = new Date(
-                panel.reading_at
-              ).toLocaleTimeString();
-              const id = panel.panel_id ?? idx;
-              if (!next[id]) {
-                next[id] = {
-                  labels: [],
-                  values: [],
-                  name: panel.name,
-                  savings_mxn: panel.savings_mxn,
-                  efficiency_percent: panel.efficiency_percent,
-                };
-              }
-              next[id] = {
-                ...next[id],
-                labels: [...next[id].labels, formattedDate].slice(-30),
-                values: [...next[id].values, panel.power_w].slice(-30),
-              };
-            });
-            return next;
-          });
-        }
+        console.log("Fetched panel data:", panelsData);
+
+        const formattedDate = new Date().toLocaleTimeString();
+
+        setPanels((prev) => {
+          const next = { ...prev };
+
+          // Reference panel
+          if (!next[0]) {
+            next[0] = {
+              labels: [],
+              values: [],
+              name: "Panel de referencia",
+              savings_mxn: 0,
+              efficiency_percent: 0,
+            };
+          }
+          next[0] = {
+            ...next[0],
+            labels: [...next[0].labels, formattedDate].slice(-30),
+            values: [...next[0].values, panelsData.power_ref].slice(-30),
+          };
+
+          // Generated panel
+          if (!next[1]) {
+            next[1] = {
+              labels: [],
+              values: [],
+              name: "Panel Generador",
+              savings_mxn: 0,
+              efficiency_percent: 0,
+            };
+          }
+          next[1] = {
+            ...next[1],
+            labels: [...next[1].labels, formattedDate].slice(-30),
+            values: [...next[1].values, panelsData.power_gen].slice(-30),
+          };
+
+          return next;
+        });
         setLoading(false);
       } catch (error) {
         setLoading(false);

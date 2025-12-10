@@ -11,18 +11,12 @@ export default function PerformanceCard() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://172.18.85.161:8001/panels/mqtt/latest"
+          "http://10.179.22.161:8001/panels/mqtt/latest"
         );
         const panelsData = await response.json();
         // console.log(panelsData);
-        if (Array.isArray(panelsData)) {
-          let totalEnergy = 0;
-          for (const panel of panelsData) {
-            if (panel.power_w) {
-              totalEnergy += panel.power_w;
-              // console.log("id" + panel.panel_id + ", w: " + panel.power_w);
-            }
-          }
+        if (panelsData && typeof panelsData === "object") {
+          const totalEnergy = panelsData.power_gen || 0;
           setEnergyGenerated(totalEnergy);
         }
         setLoading(false);

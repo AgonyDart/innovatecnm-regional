@@ -14,27 +14,30 @@ export default function Saving() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://172.18.85.161:8001/panels/mqtt/latest"
+          "http://10.179.22.161:8001/panels/mqtt/latest"
         );
         const data = await response.json();
-        // Sum savings_mxn from all panels
+
+        // Calculate savings based on panel data
         const totalSavings = Array.isArray(data)
-          ? data.reduce((sum, panel) => sum + (panel.savings_mxn || 0), 0)
+          ? data.reduce((sum, panel) => {
+              const savings = (panel.power_ref - panel.power_gen) * 1000; // Convert to MXN equivalent
+              return sum + (savings || 0);
+            }, 0)
           : 0;
 
-        // Accumulate savings
         accumulatedSavings.current += totalSavings;
         accumulatedSavings.current = parseFloat(
           accumulatedSavings.current.toFixed(5)
         );
         setSavings(accumulatedSavings.current);
 
-        // Calculate percentage savings (sum efficiency_percent or other logic)
+        // Calculate efficiency percentage
         const totalPercentage = Array.isArray(data)
-          ? data.reduce(
-              (sum, panel) => sum + (panel.efficiency_percent || 0),
-              0
-            )
+          ? data.reduce((sum, panel) => {
+              const efficiency = (panel.power_gen / panel.power_ref) * 100 || 0;
+              return sum + efficiency;
+            }, 0) / data.length
           : 0;
         setPercentageSavings(totalPercentage);
 
