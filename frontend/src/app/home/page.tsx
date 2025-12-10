@@ -11,7 +11,7 @@ export default function Home() {
   // console.log("hola");
   // useEffect(() => {
   //   console.log("Starting fetch for latest MQTT panel data...");
-  //   fetch("http://10.179.22.161:8001/")
+  //   fetch("http://172.31.98.113:8000/")
   //     .then((response) => {
   //       console.log("Received response:", response);
   //       return response.json();

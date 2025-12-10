@@ -27,7 +27,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://10.179.22.161:8001/panels/mqtt/latest"
+          "http://172.31.98.113:8000/panels/mqtt/latest"
         );
         const panelsData = await response.json();
         console.log("Fetched panel data:", panelsData);

@@ -15,11 +15,11 @@ export default function Warning({ className }: WarningProps) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://10.179.22.161:8001/panels/mqtt/latest"
+          "http://172.31.98.113:8000/panels/mqtt/latest"
         );
         const data = await response.json();
         if (data && typeof data === "object") {
-          if (data.power_gen < 0.5) {
+          if (data.power_gen < 1) {
             setFail(true);
           } else {
             setFail(false);
