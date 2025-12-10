@@ -26,23 +26,20 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     payload = msg.payload.decode()
     try:
-        # Parse the message payload from "key:value, key:value" format
-        data = dict(
-            (kv.split(":")[0].strip(), float(kv.split(":")[1]))
-            for kv in payload.split(",")
-        )
+        # Parse the JSON message payload
+        data = json.loads(payload)
         # Convert the parsed data into the desired panel object format
         panel_obj = mqtt_to_panel(data)
 
         # Add to history
-        mqtt_messages.append(panel_obj)
+        mqtt_messages.append(data)
 
         # Broadcast to all active WebSocket clients on the /ws/mqtt endpoint
         loop = asyncio.get_event_loop()
         for ws in mqtt_connections:
-            loop.create_task(ws.send_text(json.dumps(panel_obj)))
+            loop.create_task(ws.send_text(json.dumps(data)))
 
-        print("Broadcasted to WS:", panel_obj)
+        print("Broadcasted to WS:", data)
 
     except Exception as e:
         print(f"Failed to parse/store MQTT message: {payload} -> {e}")
@@ -65,10 +62,10 @@ router = APIRouter(
 active_connections: list[WebSocket] = []
 
 
-def mqtt_to_panel(data: dict) -> list[dict]:
+def mqtt_to_panel(data: dict) -> dict:
     """Converts MQTT data into the panel data format."""
-    return [
-        {
+    return {
+        "panel_ref": {
             "panel_id": "0",
             "device_id": "f5ec0a1d-2d15-4f4b-9754-60596df062ea",
             "power_w": data.get("power_ref", 0),
@@ -92,7 +89,7 @@ def mqtt_to_panel(data: dict) -> list[dict]:
             "created_at": datetime.now(timezone.utc).isoformat(),
             "updated_at": datetime.now(timezone.utc).isoformat(),
         },
-        {
+        "panel_gen": {
             "panel_id": "1",
             "device_id": "f5ec0a1d-2d15-4f4b-9754-60596df062ea",
             "power_w": data.get("power_gen", 0),
@@ -116,7 +113,7 @@ def mqtt_to_panel(data: dict) -> list[dict]:
             "created_at": datetime.now(timezone.utc).isoformat(),
             "updated_at": datetime.now(timezone.utc).isoformat(),
         },
-    ]
+    }
 
 
 _simulated_panels = [
